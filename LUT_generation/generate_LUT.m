@@ -10,11 +10,12 @@
 % Code Revision History:
 % Ver:     | Author    | Mod. Date     | Changes Made:
 % v1.0.0   | R.T.      | 2024/04/15    | Initial version
+% v1.0.0   | R.T.      | 2024/04/16    | modified comments
 %**********************************************************************
 clear; clc; close all;
 
 N = 100; % resolution of the LUT
-x = linspace(0, pi/2, N); % generate N equally spaced points between -pi and pi
+x = linspace(0, pi/2, N); % generate N equally spaced points between 0 and pi/2
 
 % calculate the sin value for each x and store them in an array
 sinLUT = sin(x);
