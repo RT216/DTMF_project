@@ -8,6 +8,7 @@
 % Code Revision History:
 % Ver:     | Author    | Mod. Date     | Changes Made:
 % v1.0.0   | R.T.      | 2024/04/16    | Initial version
+% v1.1.0   | R.T.      | 2024/04/16    | Fix the equation for DTMF
 %**********************************************************************
 clear; clc; close all;
 
@@ -26,8 +27,8 @@ for i = 1:4
 
     for j = 1:4
         % generate DTMF
-        A1 = 2 * cos(2*pi*row(i)/fs);
-        A2 = 2 * cos(2*pi*col(j)/fs);
+        A1 = cos(2*pi*row(i)/fs);
+        A2 = cos(2*pi*col(j)/fs);
 
         % Generate the input impulse signal
         h = zeros(length(n)+2); 
@@ -38,15 +39,13 @@ for i = 1:4
         x2 = zeros(1,length(n)+2);
 
         for k = 3:length(n)+2
-            x1(k) = A1*x1(k-1) - x1(k-2) + h(k) - A1*h(k-1);
-            x2(k) = A2*x2(k-1) - x2(k-2) + h(k) - A2*h(k-1);
+            x1(k) = 2*A1*x1(k-1) - x1(k-2) + h(k) - A1*h(k-1);
+            x2(k) = 2*A2*x2(k-1) - x2(k-2) + h(k) - A2*h(k-1);
         end
         
         % Delete initial condition components
-        x1(:,1)=[]; 
-        x1(:,1)=[];
-        x2(:,1)=[];
-        x2(:,1)=[];
+        x1(1:2) = [];
+        x2(1:2) = [];
 
         dtmf = x1 + x2;
 
