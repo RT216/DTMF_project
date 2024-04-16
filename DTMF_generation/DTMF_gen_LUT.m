@@ -8,6 +8,7 @@
 % Code Revision History:
 % Ver:     | Author    | Mod. Date     | Changes Made:
 % v1.0.0   | R.T.      | 2024/04/16    | Initial version
+% v1.1.0   | R.T.      | 2024/04/16    | Now can display 2 figs
 %**********************************************************************
 clear; clc; close all;
 
@@ -30,8 +31,8 @@ col = [1209, 1336, 1477, 1633];
 
 % generate DTMF
 fs = 8000; % sampling frequency
-duration = 0.1; % duration of the DTMF
-t = 0:1:duration*fs;
+duration = 0.5; % duration of the DTMF
+t = 0:1/fs:duration;
 dtmf = zeros(1, length(t));
 
 % generate & plot DTMF for each row and column
@@ -41,12 +42,12 @@ for i = 1:4
 
     for j = 1:4
         % generate DTMF
-        % dtmf = sinLUTr(mod(round(row(i) / fs * 4 * N * t), 4 * N)) + sinLUTr(mod(round(col(j) / fs * 4 * N * t), 4 * N));
         for k = 1:length(t)
-            dtmf(k) = sinLUTr(mod(round(row(i) / fs * 4 * N * t(k)), 4 * N) + 1) + sinLUTr(mod(round(col(j) / fs * 4 * N * t(k)), 4 * N) + 1);
+            dtmf(k) = sinLUTr(mod(round(row(i) * 4 * N * t(k)), 4 * N) + 1) + sinLUTr(mod(round(col(j) * 4 * N * t(k)), 4 * N) + 1);
         end
 
         % plot DTMF and the FFT
+        figure(1);
         subplot(4, 4, (i - 1) * 4 + j);
         plot(t, dtmf);
         title(['DTMF: ', num2str(row(i)), 'Hz + ', num2str(col(j)), 'Hz']);
@@ -54,12 +55,12 @@ for i = 1:4
         ylabel('Amplitude');
         grid on;
 
+        figure(2);
         subplot(4, 4, (i - 1) * 4 + j);
-        f = linspace(0, fs, length(t));
         dtmf_fft = fft(dtmf);
-        dtmf_fft = dtmf_fft(1:floor(length(t) / 2) + 1);
-        f = f(1:floor(length(t) / 2) + 1);
-        plot(f, abs(dtmf_fft));
+        dtmf_fft_half = dtmf_fft(1:floor(length(t) / 2) + 1);
+        f = linspace(0, fs/2, floor(length(t) / 2) + 1);
+        plot(f, abs(dtmf_fft_half));
         title(['FFT of DTMF: ', num2str(row(i)), 'Hz + ', num2str(col(j)), 'Hz']);
         xlabel('Frequency (Hz)');
         ylabel('Magnitude');
