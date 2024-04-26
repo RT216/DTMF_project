@@ -11,7 +11,9 @@ p = 10;                       % LPC order
 [a, g] = lpc(dtmf_signal, p); % LPC parameters
 [h, w] = freqz(sqrt(g), a, 512, fs); % Freq response
 h_sorted = sort(abs(h), "descend");
-SNR = 20*log10( (h_sorted(1) + h_sorted(2)) /(sum(h_sorted) - (h_sorted(1) + h_sorted(2))));
+
+SNR = 20*log10( (h_sorted(1) + h_sorted(2)) ...
+/(sum(h_sorted) - (h_sorted(1) + h_sorted(2))));
 
 % visualisation
 figure;
